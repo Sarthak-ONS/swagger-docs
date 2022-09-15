@@ -1,11 +1,14 @@
-const express = require("express")
+const express = require("express");
+const fileupload = require("express-fileupload");
 
 const app = express()
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./swagger.yaml');
+
 app.use(express.json())
+app.use(fileupload())
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -70,12 +73,28 @@ app.post("/api/v1/addACourse", (req, res) => {
 })
 
 app.get("/api/v1/queryCheckingParamters", (req, res) => {
-    const location = req.query;
-    const device = req.query;
+    const location = req.query.location;
+    const device = req.query.device;
     console.log({
-        location, device
+        "location": location, "device": device
     });
-    res.send("Checked")
+    res.send({
+        "location": location, "device": device
+    })
+})
+
+
+
+app.post("/api/v1/uploadImage", function (req, res) {
+    const samplefile = req.files.file
+
+    let path = __dirname + "/images/" + Date.now() + ".jpg"
+
+    console.log(path);
+
+    samplefile.mv(path, (err) => {
+        res.send(true)
+    })
 })
 
 app.listen(PORT, () => {

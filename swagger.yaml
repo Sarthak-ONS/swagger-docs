@@ -178,12 +178,41 @@ paths:
           schema:
             type: string
             enum: [web, mobile, desktop]
-
-
       responses: 
         200:
-          description: All good
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  location:
+                    type: string
+                  device:
+                    type: string
         
         400:
           description: Bad Request
 
+  /uploadImage:
+    post:
+      tags:
+        - Upload new Image
+      summary: Uploading a new image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: All good success
+              
+        400:
+          description: Bad request
+        500:
+          description: internal server error
+        
